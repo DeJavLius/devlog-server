@@ -61,7 +61,7 @@ export class SearchService {
         description,
         category,
         tags,
-        published_at AS "publishedAt",
+        "publishedAt",
         (
           similarity(title, $1)       * 4.0 +
           similarity(description, $1) * 2.0 +
