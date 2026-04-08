@@ -81,3 +81,19 @@ model Subscription {
   email     String   @unique
   createdAt DateTime @default(now())
 }
+
+// 검색 (Phase 2) — 마크다운 파일 인덱스
+model Post {
+  id          String   @id           // slug (예: "2024-post/index")
+  title       String
+  description String   @default("")
+  body        String   @default("")  // 순수 텍스트 변환본
+  category    String   @default("")
+  tags        String[] @default([])
+  series      String?
+  publishedAt DateTime
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  @@map("posts")
+}
