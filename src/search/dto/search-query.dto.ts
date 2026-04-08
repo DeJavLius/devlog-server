@@ -2,8 +2,13 @@ import { IsOptional, IsString, IsIn, IsInt, Min, Max } from 'class-validator'
 import { Type } from 'class-transformer'
 
 export class SearchQueryDto {
+  @IsOptional()
   @IsString()
-  q: string
+  title?: string
+
+  @IsOptional()
+  @IsString()
+  body?: string
 
   @IsOptional()
   @IsString()
