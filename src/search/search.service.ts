@@ -51,18 +51,19 @@ export class SearchService {
     }
 
     if (tagList.length > 0) {
-      // 태그는 개별 완전 일치 OR 조합
+      // 태그: 완전 일치 우선, 부분 매칭(ILIKE) 허용
       const tagConditions = tagList.map((tag) => {
         params.push(tag)
-        return `$${params.length} = ANY(tags)`
+        const idx = params.length
+        return `($${idx} = ANY(tags) OR EXISTS (SELECT 1 FROM unnest(tags) t WHERE t ILIKE '%' || $${idx} || '%'))`
       })
       conditions.push(`(${tagConditions.join(' OR ')})`)
-      // 스코어: 일치 태그 수 × 2.0
+      // 스코어: 완전 일치 3.0, 부분 일치 1.0
       scoreExprs.push(
         `(${tagList
           .map((_, i) => {
             const pIdx = params.length - tagList.length + 1 + i
-            return `CASE WHEN $${pIdx} = ANY(tags) THEN 2.0 ELSE 0.0 END`
+            return `CASE WHEN $${pIdx} = ANY(tags) THEN 3.0 WHEN EXISTS (SELECT 1 FROM unnest(tags) t WHERE t ILIKE '%' || $${pIdx} || '%') THEN 1.0 ELSE 0.0 END`
           })
           .join(' + ')})`,
       )
