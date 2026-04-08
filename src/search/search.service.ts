@@ -27,7 +27,7 @@ export class SearchService {
     const conditions: string[] = []
     const scoreExprs: string[] = []
 
-    await this.prisma.$executeRawUnsafe(`SET pg_trgm.similarity_threshold = 0.15`)
+    await this.prisma.$executeRawUnsafe(`SET pg_trgm.similarity_threshold = 0.3`)
 
     if (title) {
       params.push(title)
