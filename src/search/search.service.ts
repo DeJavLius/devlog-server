@@ -46,8 +46,8 @@ export class SearchService {
     if (category) {
       params.push(category)
       const idx = params.length
-      conditions.push(`(category % $${idx} OR category ILIKE '%' || $${idx} || '%')`)
-      scoreExprs.push(`similarity(category, $${idx}) * 2.0`)
+      conditions.push(`(category ILIKE '%' || $${idx} || '%')`)
+      scoreExprs.push(`CASE WHEN category ILIKE '%' || $${idx} || '%' THEN 2.0 ELSE 0.0 END`)
     }
 
     if (tagList.length > 0) {
