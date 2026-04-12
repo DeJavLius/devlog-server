@@ -11,7 +11,8 @@ datasource db {
 model User {
   id            String    @id @default(cuid())
   name          String
-  email         String    @unique
+  email         String?   @unique  // Kakao는 이메일 미수집 → null 허용
+  nickname      String?            // 사용자 지정 별명
   emailVerified Boolean   @default(false)
   image         String?
   createdAt     DateTime  @default(now())
