@@ -28,7 +28,9 @@ export class AuthService {
         kakao: {
           clientId: process.env.KAKAO_CLIENT_ID!,
           clientSecret: process.env.KAKAO_CLIENT_SECRET ?? '',
-          // 비즈 앱 미인증 시 이메일 미수집 → placeholder 생성
+          // 비즈 앱 미인증 → account_email 스코프 제외
+          scopes: ['profile_image', 'profile_nickname'],
+          // 이메일 없으므로 placeholder 생성
           mapProfileToUser: (profile: any) => ({
             email:
               profile.email ||
