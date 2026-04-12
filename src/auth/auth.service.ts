@@ -25,14 +25,25 @@ export class AuthService {
           clientId: process.env.GITHUB_CLIENT_ID!,
           clientSecret: process.env.GITHUB_CLIENT_SECRET!,
         },
-        // Kakao: clientSecret 불필요 (REST API 키만 사용)
         kakao: {
           clientId: process.env.KAKAO_CLIENT_ID!,
           clientSecret: process.env.KAKAO_CLIENT_SECRET ?? '',
+          // 비즈 앱 미인증 시 이메일 미수집 → placeholder 생성
+          mapProfileToUser: (profile: any) => ({
+            email:
+              profile.email ||
+              `kakao_${profile.id ?? Date.now()}@placeholder.local`,
+          }),
         },
         naver: {
           clientId: process.env.NAVER_CLIENT_ID!,
           clientSecret: process.env.NAVER_CLIENT_SECRET!,
+          // 이메일 미동의 시 placeholder 생성
+          mapProfileToUser: (profile: any) => ({
+            email:
+              profile.email ||
+              `naver_${profile.id ?? Date.now()}@placeholder.local`,
+          }),
         },
       },
       advanced: {
