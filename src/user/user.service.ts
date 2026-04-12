@@ -16,10 +16,12 @@ export class UserService {
         nickname: true,
         image: true,
         createdAt: true,
+        accounts: { select: { providerId: true }, take: 1 },
       },
     });
     if (!user) throw new NotFoundException('사용자를 찾을 수 없습니다.');
-    return user;
+    const { accounts, ...rest } = user;
+    return { ...rest, provider: accounts[0]?.providerId ?? null };
   }
 
   async updateMe(userId: string, dto: UpdateUserDto) {
