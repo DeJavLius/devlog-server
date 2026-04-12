@@ -5,3 +5,4 @@ dist
 *.env.local
 
 /generated/prisma
+.gitnexus
