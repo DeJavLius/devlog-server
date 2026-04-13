@@ -9,8 +9,11 @@ export class AuthController {
   @All('*splat')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async handleAuth(@Req() req: any, @Res() res: any) {
+    const baseURL =
+      process.env.BETTER_AUTH_URL ??
+      `http://localhost:${process.env.PORT ?? 3000}`;
     const response = await this.authService.auth.handler(
-      new globalThis.Request(`http://localhost${req.url}`, {
+      new globalThis.Request(`${baseURL}${req.url}`, {
         method: req.method,
         headers: req.headers as HeadersInit,
         body:
