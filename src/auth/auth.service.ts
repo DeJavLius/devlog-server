@@ -61,6 +61,7 @@ export class AuthService {
         accountLinking: {
           enabled: true,
           trustedProviders: ['google', 'github', 'kakao', 'naver'],
+          allowDifferentEmails: true,
         },
       },
     };
