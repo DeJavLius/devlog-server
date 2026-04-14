@@ -4,6 +4,7 @@ import { AuthModule } from './auth/auth.module';
 import { AuthMiddleware } from './auth/auth.middleware';
 import { CommentsModule } from './comments/comments.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { ReactionsModule } from './reactions/reactions.module';
 import { SearchModule } from './search/search.module';
 import { UserModule } from './user/user.module';
 
@@ -13,6 +14,7 @@ import { UserModule } from './user/user.module';
     PrismaModule,
     AuthModule,
     CommentsModule,
+    ReactionsModule,
     SearchModule,
     UserModule,
   ],
