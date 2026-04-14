@@ -57,6 +57,12 @@ export class AuthService {
         },
       },
       trustedOrigins: [process.env.ALLOWED_ORIGIN ?? 'http://localhost:1234'],
+      account: {
+        accountLinking: {
+          enabled: true,
+          trustedProviders: ['google', 'github', 'kakao', 'naver'],
+        },
+      },
     };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.auth = betterAuth(config as any);

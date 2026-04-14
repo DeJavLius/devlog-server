@@ -38,10 +38,19 @@ export class UserService {
   }
 
   async getMyComments(userId: string) {
-    return this.prisma.comment.findMany({
+    const comments = await this.prisma.comment.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
       select: { id: true, postId: true, content: true, createdAt: true },
     });
+
+    const postIds = [...new Set(comments.map((c) => c.postId))];
+    const posts = await this.prisma.post.findMany({
+      where: { id: { in: postIds } },
+      select: { id: true, title: true },
+    });
+    const postMap = Object.fromEntries(posts.map((p) => [p.id, p.title]));
+
+    return comments.map((c) => ({ ...c, postTitle: postMap[c.postId] ?? c.postId }));
   }
 }
