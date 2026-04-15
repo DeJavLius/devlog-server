@@ -1,6 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { readdirSync, unlinkSync } from 'fs';
+import { join } from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+
+function avatarDir(): string {
+  const base = process.env.UPLOADS_DIR ?? join(process.cwd(), 'uploads');
+  return join(base, 'avatars');
+}
+
+function avatarPublicUrl(filename: string): string {
+  const base = process.env.BETTER_AUTH_URL ?? '';
+  return `${base}/uploads/avatars/${filename}`;
+}
 
 @Injectable()
 export class UserService {
@@ -28,6 +40,30 @@ export class UserService {
     return this.prisma.user.update({
       where: { id: userId },
       data: dto,
+      select: { id: true, name: true, email: true, nickname: true, image: true },
+    });
+  }
+
+  async uploadAvatar(userId: string, filename: string) {
+    // 이전 아바타 파일 정리 (userId-로 시작하는 파일 중 새 파일 외 삭제)
+    try {
+      const dir = avatarDir();
+      for (const name of readdirSync(dir)) {
+        if (name.startsWith(`${userId}-`) && name !== filename) {
+          try {
+            unlinkSync(join(dir, name));
+          } catch {
+            // 파일이 이미 없을 수 있으니 무시
+          }
+        }
+      }
+    } catch {
+      // 디렉터리가 비어있거나 접근 불가한 경우 무시
+    }
+
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { image: avatarPublicUrl(filename) },
       select: { id: true, name: true, email: true, nickname: true, image: true },
     });
   }
